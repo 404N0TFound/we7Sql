@@ -1,0 +1,20 @@
+{
+  "name": "404N0TFound/we7Sql",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "lf",
+      "email": "648744231@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "We7\\Sql\\" : "src/we7/sql"
+    }
+  }
+}
