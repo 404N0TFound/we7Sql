@@ -89,6 +89,9 @@ class We7Sql
         if (!empty($_W['uniacid']) && pdo_fieldexists($this->tablename, 'uniacid')) {
             $conditon['uniacid'] = $_W['uniacid'];
         }
+        if (pdo_fieldexists($this->tablename, 'del')) {
+            $conditon['del'] = 0;
+        }
         $sqlResult = $this->buildSql($get, $conditon, $orderBy, $limit);
         if ($sqlResult == false) {
             return [];
@@ -142,6 +145,9 @@ class We7Sql
         if (!empty($_W['uniacid']) && pdo_fieldexists($this->tablename, 'uniacid')) {
             $conditon['uniacid'] = $_W['uniacid'];
         }
+        if (pdo_fieldexists($this->tablename, 'del')) {
+            $conditon['del'] = 0;
+        }
         $sqlResult = $this->buildSql([$get], $conditon, $orderBy, $limit);
         if ($sqlResult == false) {
             return [];
@@ -163,6 +169,9 @@ class We7Sql
         if (!empty($_W['uniacid']) && pdo_fieldexists($this->tablename, 'uniacid')) {
             $insert['uniacid'] = $_W['uniacid'];
         }
+        if (!empty($_W['created_at']) && pdo_fieldexists($this->tablename, 'created_at')) {
+            $insert['created_at'] = time();
+        }
         $ret = pdo_insert($this->tablename, $insert);
         if ($ret) {
             return pdo_insertid();
@@ -180,7 +189,11 @@ class We7Sql
         if (empty($cond)) {
             return false;
         }
-        return pdo_delete($this->tablename, $cond);
+        if (pdo_fieldexists($this->tablename, 'del')) {
+            return $this->update(['del' => 1], $cond);
+        } else {
+            return pdo_delete($this->tablename, $cond);
+        }
     }
 
     /**
@@ -192,6 +205,9 @@ class We7Sql
     {
         if (empty($data) || empty($cond)) {
             return false;
+        }
+        if (pdo_fieldexists($this->tablename, 'updated_at')) {
+            $data['upadted_at'] = time();
         }
         return pdo_update($this->tablename, $data, $cond);
     }
