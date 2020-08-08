@@ -169,8 +169,14 @@ class We7Sql
         if (!empty($_W['uniacid']) && pdo_fieldexists($this->tablename, 'uniacid')) {
             $insert['uniacid'] = $_W['uniacid'];
         }
-        if (!empty($_W['created_at']) && pdo_fieldexists($this->tablename, 'created_at')) {
+        if (empty($_W['created_at']) && pdo_fieldexists($this->tablename, 'created_at')) {
             $insert['created_at'] = time();
+        }
+        if (empty($_W['updated_at']) && pdo_fieldexists($this->tablename, 'updated_at')) {
+            $insert['updated_at'] = time();
+        }
+        if (!empty($insert['ext_info']) && is_array($insert['ext_info'])) {
+            $insert['ext_info'] = json_encode($insert['ext_info']);
         }
         $ret = pdo_insert($this->tablename, $insert);
         if ($ret) {
@@ -206,8 +212,11 @@ class We7Sql
         if (empty($data) || empty($cond)) {
             return false;
         }
-        if (pdo_fieldexists($this->tablename, 'updated_at')) {
-            $data['upadted_at'] = time();
+        if (empty($_W['updated_at']) && pdo_fieldexists($this->tablename, 'updated_at')) {
+            $data['updated_at'] = time();
+        }
+        if (!empty($data['ext_info']) && is_array($data['ext_info'])) {
+            $data['ext_info'] = json_encode($data['ext_info']);
         }
         return pdo_update($this->tablename, $data, $cond);
     }
